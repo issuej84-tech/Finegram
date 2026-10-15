@@ -25,6 +25,11 @@ public final class MaterialAppearance {
             settings = new MaterialSettings(ApplicationLoader.applicationContext);
         return settings;
     }
+    /** Stock folder illustrations must not compete with the Material/global wallpaper. */
+    public static boolean hideStockHeaderCovers() {
+        MaterialSettings s = settings();
+        return s != null && (s.enabled() || s.wallpaper());
+    }
     public static MaterialPalette palette() {
         MaterialSettings s = settings();
         int seed = s == null ? MaterialSettings.DEFAULT_SEED : s.seed();
@@ -43,6 +48,8 @@ public final class MaterialAppearance {
         if (s == null || !s.enabled() || Theme.getActiveTheme() == null) return Long.MIN_VALUE;
         MaterialPalette p = palette();
         android.util.SparseIntArray map = p.dark ? darkRoles : lightRoles;
+        // Theme can re-enter getColor while palette role keys trigger its class initialization.
+        if (map == null) return Long.MIN_VALUE;
         int index = map.indexOfKey(key);
         return index < 0 ? Long.MIN_VALUE : map.valueAt(index) & 0xffffffffL;
     }
@@ -173,7 +180,7 @@ public final class MaterialAppearance {
     }
     public static boolean isEnabled() {
         MaterialSettings s = settings();
-        return s != null && s.enabled();
+        return s != null && (s.enabled() || s.wallpaper());
     }
     private static boolean offeredGuide;
     public static void maybeShowGuide(BaseFragment fragment) {

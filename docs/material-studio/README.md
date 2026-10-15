@@ -99,3 +99,7 @@ ANDROID_SERIAL=emulator-5554 python3 tools/material-tests/ui_smoke.py
 ![Русский язык и тёмная тема](screenshots/09-russian-dark.webp)
 
 Остальные состояния: [screenshots](screenshots).
+
+## Flowseal и стабильные обои
+
+[Описание режима, исправлений фона и воспроизводимых проверок](FLOWSEAL.md).

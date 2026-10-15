@@ -104,6 +104,15 @@ public final class MaterialWallpaper {
     public static Drawable drawable(int surface, int scrimPercent) {
         return cached == null ? null : new WallpaperDrawable(cached, surface, scrimPercent, null);
     }
+    /** Draw global chat wallpaper in the same window coordinates as the app surface.
+     * Ignore Telegram's legacy parallax/bounds; per-chat wallpaper drawables are untouched. */
+    public static boolean drawInView(Drawable drawable, Canvas canvas, android.view.View view) {
+        if (!(drawable instanceof WallpaperDrawable) || view == null) return false;
+        WallpaperDrawable wallpaper = (WallpaperDrawable) drawable;
+        wallpaper.setBounds(0, 0, view.getWidth(), view.getHeight());
+        wallpaper.draw(canvas, view);
+        return true;
+    }
     public static boolean applyTo(android.view.View view, int surface, int scrimPercent) {
         Bitmap bitmap = cached;
         if (bitmap == null) return false;
@@ -128,11 +137,11 @@ public final class MaterialWallpaper {
             this.bitmap = bitmap; this.surface = surface; this.scrimPercent = scrimPercent;
             anchor = new java.lang.ref.WeakReference<>(view);
         }
-        @Override public void draw(Canvas canvas) {
+        @Override public void draw(Canvas canvas) { draw(canvas, anchor.get()); }
+        void draw(Canvas canvas, android.view.View view) {
             Rect b = getBounds();
             if (b.isEmpty()) return;
             float width = b.width(), height = b.height(), offsetX = 0, offsetY = 0;
-            android.view.View view = anchor.get();
             if (view != null && view.isAttachedToWindow()) {
                 android.view.View window = view.getRootView();
                 width = window.getWidth(); height = window.getHeight();

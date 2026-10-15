@@ -91,7 +91,7 @@ public class BypassRoutePreferencesEntry extends BaseCGPreferencesEntry {
                 updateRows(false);
             });
         });
-        FGBypassLocations.measureAll(() -> updateRows(false));
+        if (!FGBypassConfig.tgwsFirst()) FGBypassLocations.measureAll(() -> updateRows(false));
     }
 
     @Override

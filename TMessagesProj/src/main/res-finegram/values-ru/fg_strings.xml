@@ -679,7 +679,7 @@
     <string name="FG_Bypass_Route">Сервер</string>
     <string name="FG_Bypass_Route_Tgws">Flowseal</string>
     <string name="FG_Bypass_Route_Relay">Наш сервер</string>
-    <string name="FG_Bypass_Route_Tgws_Desc">Серверы проекта tg-ws-proxy через Cloudflare. Если подключение недоступно, используется сервер Finegram.</string>
+    <string name="FG_Bypass_Route_Tgws_Desc">Flowseal tg-ws-proxy (Android-адаптация): официальные Cloudflare-маршруты, затем прямой WebSocket Telegram. Без автоматического перехода на серверы Finegram. Доступность зависит от вашей сети.</string>
     <string name="FG_Bypass_Route_Relay_Desc">Сервер Finegram в выбранной локации. Если подключение недоступно, используются серверы tg-ws-proxy.</string>
     <string name="FG_Plugins_InstallConfirm">Установить</string>
     <string name="FG_MessageMenuBehaviour">Поведение</string>

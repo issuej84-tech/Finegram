@@ -126,7 +126,8 @@ public final class FGBypassConfig {
                     .remove("tgws_direct").remove("tgws_cloudflare").apply();
             return migrated;
         }
-        return SOURCE_RELAY;
+        // Fresh installations use Flowseal. Explicit saved route choices are preserved.
+        return SOURCE_TGWS;
     }
 
     public static void setSource(int v) {

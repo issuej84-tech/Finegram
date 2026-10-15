@@ -48,13 +48,11 @@ public final class TgwsDomains {
             "zaftuzsftqdq.com",
     };
 
-    private static final String MIRROR_URL = "https://th3web.com/finegram/ws-domains.txt";
-
     private static final String UPSTREAM_URL =
             "https://raw.githubusercontent.com/Flowseal/tg-ws-proxy/main/.github/cfproxy-domains.txt";
 
-    private static final String KEY_LIST = "tgws_domains";
-    private static final String KEY_FETCHED = "tgws_domains_at";
+    private static final String KEY_LIST = "flowseal_official_domains_v1";
+    private static final String KEY_FETCHED = "flowseal_official_domains_at_v1";
 
     private static final long REFRESH_INTERVAL_MS = 6L * 60 * 60 * 1000;
 
@@ -151,10 +149,8 @@ public final class TgwsDomains {
         if (!fetching.compareAndSet(false, true)) return;
         Utilities.globalQueue.postRunnable(() -> {
             try {
-                String body = fetch(MIRROR_URL);
-                if (parse(body).size() < MIN_VALID) {
-                    body = fetch(UPSTREAM_URL);
-                }
+                // Official Flowseal list only; bundled defaults cover offline refresh failures.
+                String body = fetch(UPSTREAM_URL);
                 List<String> parsed = parse(body);
                 if (parsed.size() >= MIN_VALID) {
                     synchronized (TgwsDomains.class) {

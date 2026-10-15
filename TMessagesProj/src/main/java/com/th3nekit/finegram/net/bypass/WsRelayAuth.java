@@ -86,6 +86,7 @@ public final class WsRelayAuth {
     private static final Object authGenerationLock = new Object();
 
     public static boolean isAuthAllowed() {
+        if (FGBypassConfig.tgwsFirst()) return false;
 
         if (!authNeeded()) {
             return false;

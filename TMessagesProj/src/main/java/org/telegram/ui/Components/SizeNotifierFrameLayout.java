@@ -218,7 +218,10 @@ public class SizeNotifierFrameLayout extends FrameLayout implements Theme.Colora
                     translationX = 0;
                     translationY = 0;
                 }
-                if (drawable instanceof MotionBackgroundDrawable) {
+                if (com.th3nekit.finegram.appearance.material.MaterialWallpaper.drawInView(drawable, canvas, this)) {
+                    // Keep a global image pinned while navigating; never inherit stock parallax.
+                    checkSnowflake(canvas);
+                } else if (drawable instanceof MotionBackgroundDrawable) {
                     MotionBackgroundDrawable motionBackgroundDrawable = (MotionBackgroundDrawable) drawable;
                     if (motionBackgroundDrawable.hasPattern()) {
                         int actionBarHeight = (isActionBarVisible() ? ActionBar.getCurrentActionBarHeight() : 0) + (isStatusBarVisible() && occupyStatusBar ? AndroidUtilities.statusBarHeight : 0);

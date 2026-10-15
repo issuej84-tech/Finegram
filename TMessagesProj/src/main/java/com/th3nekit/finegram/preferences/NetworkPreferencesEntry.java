@@ -93,8 +93,10 @@ public class NetworkPreferencesEntry extends BaseCGPreferencesEntry
         items.add(SettingsHelper.asSwitchCG(enabledRow, getString(R.string.FG_Bypass_Enable), statusText())
                 .setChecked(enabled)
         );
+        if (!FGBypassConfig.tgwsFirst()) {
         items.add(UItem.asButton(locationRow, R.drawable.fg_globe_24, getString(R.string.FG_Bypass_Location),
                 locationText()));
+        }
         items.add(UItem.asButton(routeRow, R.drawable.fg_route_24, getString(R.string.FG_Bypass_Route),
                 routeText()));
         items.add(UItem.asButton(proxyRow, R.drawable.fg_server_24, getString(R.string.FG_Bypass_OpenProxy)));

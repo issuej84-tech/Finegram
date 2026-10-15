@@ -636,6 +636,8 @@ public final class WsBypassCore {
 
     private RawWebSocket tryRelay(int dc, boolean isMedia, long routeDeadline,
                                   long generation, boolean last) {
+        // Flowseal is a separate transport, not permission to contact Finegram relays.
+        if (FGBypassConfig.tgwsFirst()) return null;
         long deadline = last ? routeDeadline : Math.min(routeDeadline,
                 System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(WS_RELAY_BUDGET_MS));
         try {

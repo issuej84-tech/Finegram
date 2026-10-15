@@ -14364,14 +14364,16 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         if (folderCoverView == null) return;
         ArrayList<MessagesController.DialogFilter> filters = getMessagesController().getDialogFilters();
         int id = index >= 0 && index < filters.size() ? filters.get(index).id : 0;
-        folderCoverView.setFolder(currentAccount, id, animated);
+        if (!com.th3nekit.finegram.appearance.material.MaterialAppearance.hideStockHeaderCovers())
+            folderCoverView.setFolder(currentAccount, id, animated);
         updateFolderCoverPresentation();
     }
 
     private void updateFolderCoverPresentation() {
         if (folderCoverView == null || actionBar == null) return;
         float alpha = 0;
-        if (com.th3nekit.finegram.core.configs.FinegramAppearanceConfig.INSTANCE.getFolderCovers()) {
+        if (com.th3nekit.finegram.core.configs.FinegramAppearanceConfig.INSTANCE.getFolderCovers()
+                && !com.th3nekit.finegram.appearance.material.MaterialAppearance.hideStockHeaderCovers()) {
             float search = animatorSearchVisible.getFloatValue();
             float selection = Math.max(progressToActionMode, animatorActionModeVisible.getFloatValue());
             alpha = (1f - search) * (1f - selection) * (1f - getRightSlidingProgress());
