@@ -133,6 +133,9 @@
         android:enableOnBackInvokedCallback="true"
         android:networkSecurityConfig="@xml/network_security_config"
     >
+        <activity android:name="com.th3nekit.finegram.appearance.material.MaterialStudioActivity"
+            android:theme="@style/Theme.Finegram.Material"
+            android:exported="false" />
         <!-- usesCleartextTraffic for browser supporting opening http:// links -->
 
         <activity-alias

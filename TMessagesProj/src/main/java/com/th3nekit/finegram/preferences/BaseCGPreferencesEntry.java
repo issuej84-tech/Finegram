@@ -133,7 +133,7 @@ public class BaseCGPreferencesEntry extends UniversalFragment {
                 blurScrimPaint.setAlpha(oldScrimAlpha);
             }
         };
-        contentView.setBackgroundColor(getThemedColor(Theme.key_windowBackgroundGray));
+        com.th3nekit.finegram.appearance.material.MaterialAppearance.setSurface(this, contentView, getThemedColor(Theme.key_windowBackgroundGray));
 
         listView = new UniversalRecyclerView(this, this::fillItems, this::onClick, this::onSettingLongClick);
 
@@ -449,7 +449,7 @@ public class BaseCGPreferencesEntry extends UniversalFragment {
 
     private void updateSettingsColors() {
         if (contentView == null || actionBar == null) return;
-        contentView.setBackgroundColor(getThemedColor(Theme.key_windowBackgroundGray));
+        com.th3nekit.finegram.appearance.material.MaterialAppearance.setSurface(this, contentView, getThemedColor(Theme.key_windowBackgroundGray));
         actionBar.setTitleColor(getThemedColor(Theme.key_windowBackgroundWhiteBlackText));
         actionBar.setItemsColor(getThemedColor(Theme.key_windowBackgroundWhiteBlackText), false);
         actionBar.setItemsBackgroundColor(getThemedColor(Theme.key_listSelector), false);

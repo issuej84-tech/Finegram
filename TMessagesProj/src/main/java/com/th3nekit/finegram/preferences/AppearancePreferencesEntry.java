@@ -53,6 +53,7 @@ import com.th3nekit.finegram.preferences.helpers.TelegramSettingsHelper;
 
 public class AppearancePreferencesEntry extends BaseCGPreferencesEntry {
 
+    private final int materialStudioRow = 1701;
     private final int centerTitleRow = 1;
     private final int hideSearchBar = 2;
     private final int snowflakesRow = 3;
@@ -84,6 +85,9 @@ public class AppearancePreferencesEntry extends BaseCGPreferencesEntry {
 
     @Override
     protected void fillItems(ArrayList<UItem> items, UniversalAdapter adapter) {
+        items.add(UItem.asHeader(getString(R.string.FGM_Title)));
+        items.add(UItem.asButton(materialStudioRow, getString(R.string.FGM_Entry), getString(R.string.FGM_EntryDesc)));
+        items.add(UItem.asShadow(null));
         items.add(UItem.asHeader(getString(R.string.AP_Header)));
         items.add(SettingsHelper.asSwitchCG(centerTitleRow, getString(R.string.AP_CenterTitle))
                 .setChecked(FinegramAppearanceConfig.INSTANCE.getCenterTitle())
@@ -199,7 +203,9 @@ public class AppearancePreferencesEntry extends BaseCGPreferencesEntry {
 
     @Override
     protected void onClick(UItem item, View view, int position, float x, float y) {
-        if (item.id == centerTitleRow) {
+        if (item.id == materialStudioRow) {
+            com.th3nekit.finegram.appearance.material.MaterialAppearance.open(getParentActivity(), false);
+        } else if (item.id == centerTitleRow) {
             FinegramAppearanceConfig.INSTANCE.setCenterTitle(!FinegramAppearanceConfig.INSTANCE.getCenterTitle());
             SettingsHelper.updateCheckState(view, FinegramAppearanceConfig.INSTANCE.getCenterTitle());
 

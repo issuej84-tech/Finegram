@@ -7236,6 +7236,9 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     @Override
     public void onResume() {
         super.onResume();
+        if (!onlySelect && folderId == 0) {
+            AndroidUtilities.runOnUIThread(() -> com.th3nekit.finegram.appearance.material.MaterialAppearance.maybeShowGuide(this), 450);
+        }
         if (folderCoverView != null) {
             setFolderCover(filterTabsView == null ? 0 : filterTabsView.getCurrentTabId(), false);
         }

@@ -9048,6 +9048,11 @@ public class Theme {
         if (FinegramAppearanceConfig.INSTANCE.getDisableDividers() && key_divider == key) {
             return 0x00ffffff;
         }
+        long materialColor = com.th3nekit.finegram.appearance.material.MaterialAppearance.color(key);
+        if (materialColor != Long.MIN_VALUE) {
+            if (isDefault != null) isDefault[0] = false;
+            return (int) materialColor;
+        }
         if (serviceBitmapShader != null && (key_chat_serviceText == key || key_chat_serviceLink == key || key_chat_serviceIcon == key
                 || key_chat_stickerReplyLine == key || key_chat_stickerReplyNameText == key || key_chat_stickerReplyMessageText == key)) {
             return 0xffffffff;
@@ -9887,6 +9892,8 @@ public class Theme {
     }
 
     public static Drawable getCachedWallpaperNonBlocking() {
+        Drawable materialWallpaper = com.th3nekit.finegram.appearance.material.MaterialAppearance.chatWallpaper();
+        if (materialWallpaper != null) return materialWallpaper;
         if (themedWallpaper != null) {
             return themedWallpaper;
         } else {

@@ -345,6 +345,7 @@ public class ApplicationLoader extends Application {
         }
 
         super.onCreate();
+        com.th3nekit.finegram.appearance.material.MaterialAppearance.preloadWallpapers();
 
         final String helloWorld = AndroidUtilities.getHelloWorld();
 

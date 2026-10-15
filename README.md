@@ -80,3 +80,9 @@ Python-зависимости загружаются при сборке. Для
 Магазин плагинов использует адаптированные части [PluginManager](https://git.kangel.xyz/KangelPlugins/PluginManager) проекта KangelPlugins, распространяемого под GPL-3.0. Оригинальный текст лицензии сохранён в [LICENSE.PluginManager](LICENSE.PluginManager).
 
 Finegram распространяется под [GPL-3.0](LICENSE). Лицензия исходного Telegram сохранена в [LICENSE.telegram-gpl2](LICENSE.telegram-gpl2). Сторонние компоненты перечислены в [NOTICE](NOTICE).
+
+## Material Studio / Pixel edition
+
+В этом форке добавлено нативное оформление Material You: свой акцентный цвет, глобальные обои и интерактивное руководство.
+
+**[Возможности, скриншоты и статус сборки →](docs/material-studio/README.md)**

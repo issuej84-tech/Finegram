@@ -90,7 +90,20 @@ public class SeekBarWaveform {
         delegate = seekBarDelegate;
     }
 
+    private int guardedInner, guardedOuter, guardedSelected, guardedBubble;
+    private boolean guardedColors;
+    public void setColors(int inner, int outer, int selected, int bubble) {
+        if (guardedColors && inner == guardedInner && outer == guardedOuter
+                && selected == guardedSelected && bubble == guardedBubble) return;
+        int fill = com.th3nekit.finegram.appearance.material.VoiceProgressColors.fill(outer, bubble);
+        setColors(com.th3nekit.finegram.appearance.material.VoiceProgressColors.track(inner, fill, bubble), fill,
+                com.th3nekit.finegram.appearance.material.VoiceProgressColors.track(selected, fill, bubble));
+        guardedInner = inner; guardedOuter = outer; guardedSelected = selected; guardedBubble = bubble;
+        guardedColors = true;
+    }
+
     public void setColors(int inner, int outer, int selected) {
+        guardedColors = false;
         innerColor = inner;
         outerColor = outer;
         selectedColor = selected;

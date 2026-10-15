@@ -286,6 +286,7 @@ public abstract class BaseFragment {
     private View performCreateViewImpl(Context context) {
         final View view = createView(context);
         onViewCreated(view);
+        com.th3nekit.finegram.appearance.material.MaterialAppearance.decorate(this, view);
         return view;
     }
 
@@ -561,6 +562,7 @@ public abstract class BaseFragment {
     @CallSuper
     public void onResume() {
         isPaused = false;
+        com.th3nekit.finegram.appearance.material.MaterialAppearance.decorate(this, fragmentView);
         if (actionBar != null) {
             actionBar.onResume();
         }
