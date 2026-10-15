@@ -192,8 +192,6 @@ BSSL_NAMESPACE_END
 #endif
 
 #define BORINGSSL_DEFINE_STACK_OF_IMPL(name, ptrtype, constptrtype)            \
-                                                                                
-
                                                                                \
   OPENSSL_MSVC_PRAGMA(warning(push))                                           \
   OPENSSL_MSVC_PRAGMA(warning(disable : 4191))                                 \
