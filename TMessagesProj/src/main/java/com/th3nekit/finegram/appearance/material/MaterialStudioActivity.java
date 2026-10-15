@@ -118,9 +118,10 @@ public class MaterialStudioActivity extends Activity {
         LinearLayout toolbar = new LinearLayout(this); toolbar.setGravity(Gravity.CENTER_VERTICAL);
         TextView title = text(guide ? getString(R.string.FGM_Step, step + 1, 4) : getString(R.string.FGM_Title), 16, palette.onSurfaceVariant);
         toolbar.addView(title, new LinearLayout.LayoutParams(0, dp(56), 1)); title.setGravity(Gravity.CENTER_VERTICAL);
-        MaterialButton close = button(guide ? R.string.FGM_Skip : R.string.FGM_Close, false, () -> {
+        MaterialButton close = button(guide ? R.string.FGM_SkipShort : R.string.FGM_Close, false, () -> {
             if (guide) { settings.completeGuide(); guide = false; render(false); } else finish();
         });
+        close.setContentDescription(getString(guide ? R.string.FGM_Skip : R.string.FGM_Close));
         toolbar.addView(close, new LinearLayout.LayoutParams(-2, -2)); root.addView(toolbar);
         scroll = new ScrollView(this); scroll.setFillViewport(false); scroll.setClipToPadding(false);
         scroll.setVerticalScrollBarEnabled(false); root.addView(scroll, new LinearLayout.LayoutParams(-1, 0, 1));
@@ -162,6 +163,7 @@ public class MaterialStudioActivity extends Activity {
             chip.setText(COLOUR_NAMES[i]); chip.setCheckable(true); chip.setChecked(seed == settings.seed());
             MaterialPalette sample = new MaterialPalette(seed, dark());
             chip.setChipBackgroundColor(ColorStateList.valueOf(sample.primaryContainer)); chip.setTextColor(sample.onPrimaryContainer);
+            chip.setRippleColor(ColorStateList.valueOf((sample.primary & 0x00ffffff) | 0x22000000));
             chip.setChipStrokeColor(ColorStateList.valueOf(sample.primary)); chip.setChipStrokeWidth(seed == settings.seed() ? dp(2) : 0);
             chip.setMinHeight(dp(48)); chip.setEnsureMinTouchTargetSize(true); chip.setCheckedIconTint(ColorStateList.valueOf(sample.onPrimaryContainer));
             chip.setOnClickListener(v -> { settings.seed(seed); changed = true; chime(); render(false); }); group.addView(chip);
@@ -173,14 +175,17 @@ public class MaterialStudioActivity extends Activity {
         TextInputLayout field = new TextInputLayout(this); field.setHint(getString(R.string.FGM_CustomLabel));
         TextInputEditText edit = new TextInputEditText(field.getContext()); edit.setSingleLine(true);
         edit.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        edit.setText(String.format(Locale.ROOT, "#%06X", settings.seed() & 0xffffff)); field.addView(edit);
+        edit.setText(String.format(Locale.ROOT, "#%06X", settings.seed() & 0xffffff)); field.addView(edit); field.setBoxStrokeColor(palette.primary);
+        field.setHintTextColor(ColorStateList.valueOf(palette.primary)); edit.setTextColor(palette.onSurface);
         LinearLayout wrapper = vertical(); wrapper.setPadding(dp(24), dp(8), dp(24), 0); wrapper.addView(field);
         androidx.appcompat.app.AlertDialog dialog = new MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.FGM_Custom).setView(wrapper).setNegativeButton(R.string.FGM_Cancel, null).setPositiveButton(R.string.FGM_Apply, null).create();
-        dialog.setOnShowListener(d -> dialog.getButton(-1).setOnClickListener(v -> {
+            .setBackground(rounded(palette.containerHigh, 28)).setTitle(R.string.FGM_Custom).setView(wrapper).setNegativeButton(R.string.FGM_Cancel, null).setPositiveButton(R.string.FGM_Apply, null).create();
+        dialog.setOnShowListener(d -> {
+            tintDialog(dialog);
+            dialog.getButton(-1).setOnClickListener(v -> {
             try { settings.seed(MaterialPalette.parseSeed(String.valueOf(edit.getText()))); changed = true; dialog.dismiss(); chime(); render(false); }
             catch (IllegalArgumentException invalid) { field.setError(getString(R.string.FGM_InvalidColor)); }
-        })); dialog.show();
+        }); }); dialog.show();
     }
     private void wallpaper() {
         heading(R.string.FGM_Wallpaper, R.string.FGM_WallpaperDesc);
@@ -193,7 +198,8 @@ public class MaterialStudioActivity extends Activity {
             addButton(page, R.string.FGM_RemoveWallpaper, false, () -> { settings.wallpaper(false); changed = true; render(false); });
             gap(page, 12); TextView scrimLabel = text(getString(R.string.FGM_Scrim) + " · " + settings.scrim() + "%", 15, palette.onSurfaceVariant); page.addView(scrimLabel);
             Slider slider = new Slider(this); slider.setValueFrom(80); slider.setValueTo(95); slider.setStepSize(1); slider.setValue(settings.scrim());
-            slider.setContentDescription(getString(R.string.FGM_Scrim)); slider.setTrackActiveTintList(ColorStateList.valueOf(palette.primary)); slider.setThumbTintList(ColorStateList.valueOf(palette.primary));
+            slider.setContentDescription(getString(R.string.FGM_Scrim)); slider.setTrackInactiveTintList(ColorStateList.valueOf(palette.containerHigh)); slider.setHaloTintList(ColorStateList.valueOf((palette.primary & 0x00ffffff) | 0x33000000));
+            slider.setTrackActiveTintList(ColorStateList.valueOf(palette.primary)); slider.setThumbTintList(ColorStateList.valueOf(palette.primary));
             slider.addOnChangeListener((s, value, user) -> {
                 if (!user) return; settings.scrim(Math.round(value)); changed = true;
                 scrimLabel.setText(getString(R.string.FGM_Scrim) + " · " + Math.round(value) + "%");
@@ -204,11 +210,15 @@ public class MaterialStudioActivity extends Activity {
     private void buildStudio() {
         hero(R.string.FGM_Hero, R.string.FGM_HeroDesc); preview(); heading(R.string.FGM_Material, R.string.FGM_MaterialDesc);
         SwitchMaterial material = new SwitchMaterial(this); material.setText(R.string.FGM_Material); material.setTextSize(16); material.setTextColor(palette.onSurface); material.setMinHeight(dp(56)); material.setChecked(settings.enabled());
+        material.setUseMaterialThemeColors(false);
+        int[][] switchStates = {{android.R.attr.state_checked}, {}};
+        material.setThumbTintList(new ColorStateList(switchStates, new int[]{palette.primary, palette.outline}));
+        material.setTrackTintList(new ColorStateList(switchStates, new int[]{palette.primaryContainer, palette.containerHigh}));
         material.setOnCheckedChangeListener((b, checked) -> { settings.enabled(checked); changed = true; }); page.addView(material, new LinearLayout.LayoutParams(-1, -2));
         colours(); wallpaper(); gap(page, 24);
         addButton(page, R.string.FGM_Replay, false, () -> { guide = true; step = 0; sounds = false; render(true); });
-        addButton(page, R.string.FGM_Reset, false, () -> new MaterialAlertDialogBuilder(this).setTitle(R.string.FGM_Reset).setMessage(R.string.FGM_ResetBody)
-            .setNegativeButton(R.string.FGM_Cancel, null).setPositiveButton(R.string.FGM_Reset, (d, w) -> { settings.reset(); changed = true; render(false); }).show());
+        addButton(page, R.string.FGM_Reset, false, () -> showThemedDialog(new MaterialAlertDialogBuilder(this).setTitle(R.string.FGM_Reset).setMessage(R.string.FGM_ResetBody)
+            .setNegativeButton(R.string.FGM_Cancel, null).setPositiveButton(R.string.FGM_Reset, (d, w) -> { settings.reset(); changed = true; render(false); })));
     }
     private void buildGuide() {
         LinearLayout progress = new LinearLayout(this);
@@ -238,9 +248,19 @@ public class MaterialStudioActivity extends Activity {
         step++; chime(); render(true); page.announceForAccessibility(getString(R.string.FGM_Step, step + 1, 4));
     }
     private void soundConsent(boolean advance) {
-        new MaterialAlertDialogBuilder(this).setTitle(R.string.FGM_SoundTitle).setMessage(R.string.FGM_SoundBody)
+        showThemedDialog(new MaterialAlertDialogBuilder(this).setTitle(R.string.FGM_SoundTitle).setMessage(R.string.FGM_SoundBody)
             .setNegativeButton(R.string.FGM_WithoutSound, (d, w) -> { stopSound(); if (advance) advance(); else render(false); })
-            .setPositiveButton(R.string.FGM_WithSound, (d, w) -> { sounds = true; if (advance) advance(); else render(false); }).show();
+            .setPositiveButton(R.string.FGM_WithSound, (d, w) -> { sounds = true; if (advance) advance(); else render(false); }));
+    }
+    private void tintDialog(androidx.appcompat.app.AlertDialog dialog) {
+        for (int which : new int[]{-1, -2, -3}) {
+            android.widget.Button button = dialog.getButton(which);
+            if (button != null) button.setTextColor(palette.primary);
+        }
+    }
+    private void showThemedDialog(MaterialAlertDialogBuilder builder) {
+        androidx.appcompat.app.AlertDialog dialog = builder.setBackground(rounded(palette.containerHigh, 28)).create();
+        dialog.setOnShowListener(d -> tintDialog(dialog)); dialog.show();
     }
     private void chime() {
         if (!sounds) return;

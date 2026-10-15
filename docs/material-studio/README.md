@@ -39,10 +39,25 @@
 
 ```bash
 ./tools/test-material-palette.sh
-./gradlew -p tools/material-preview assembleDebug
+./gradlew -p tools/material-preview assembleDebug assembleDebugAndroidTest
 ```
 
 `tools/material-preview` собирает тот же нативный экран отдельным приложением `com.th3nekit.finegram.materialpreview`, не запрашивает Telegram API-ключи, не содержит аккаунтов и не заменяет установленный Finegram. Это **preview оформления, не полный Telegram-клиент**.
+
+Проверены 8 298 утверждений палитры/контраста текста (518 акцентов × светлая/тёмная тема), 30 000 утверждений контраста голосовых и 218 нативных проверок обоев/настроек на эмуляторе Pixel (Android 15): EXIF, безопасное уменьшение, откат при повреждённом файле, callback на UI-потоке и 100 повторных применений без замены Drawable. UI smoke: все шаги, неверный/верный HEX, явное включение/выключение звука, импорт/перезапуск, русский/английский язык, тёмная тема, увеличенный шрифт и выключенная анимация.
+
+Нативные регрессионные проверки после установки обоих APK:
+
+```bash
+adb -s emulator-5554 shell am instrument -w \
+  com.th3nekit.finegram.materialpreview.test/com.th3nekit.finegram.materialpreview.MaterialPreviewInstrumentation
+```
+
+UI smoke (только отдельный preview в эмуляторе):
+
+```bash
+ANDROID_SERIAL=emulator-5554 python3 tools/material-tests/ui_smoke.py
+```
 
 Основная Java/Kotlin-компиляция выполнялась командой:
 

@@ -24,6 +24,7 @@ public final class MaterialWallpaper {
     private static File file(Context c) { return new File(c.getFilesDir(), "material-wallpaper.jpg"); }
 
     public static boolean ready() { return cached != null; }
+    static Object identity() { return cached; }
 
     public static void warm(Context context, Runnable ready) {
         Context c = context.getApplicationContext();

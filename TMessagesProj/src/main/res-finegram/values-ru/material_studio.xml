@@ -57,4 +57,5 @@
     <string name="FGM_ColourRose">Розовый</string>
     <string name="FGM_ColourTeal">Бирюзовый</string>
     <string name="FGM_Close">Закрыть</string>
+    <string name="FGM_SkipShort">Пропустить</string>
 </resources>

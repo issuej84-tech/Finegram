@@ -237,12 +237,16 @@ public final class MaterialAppearance {
     private static Drawable cachedChatWallpaper;
     private static long wallpaperRevision = -1;
     private static boolean wallpaperDark;
+    private static Object wallpaperIdentity;
+    private static int wallpaperSurface;
     public static Drawable chatWallpaper() {
         MaterialSettings s = settings();
         if (s == null || !s.wallpaper() || !MaterialWallpaper.ready()) return null;
         MaterialPalette p = palette();
-        if (cachedChatWallpaper == null || wallpaperRevision != s.revision() || wallpaperDark != p.dark) {
+        if (cachedChatWallpaper == null || wallpaperRevision != s.revision() || wallpaperDark != p.dark
+                || wallpaperIdentity != MaterialWallpaper.identity() || wallpaperSurface != p.surface) {
             wallpaperRevision = s.revision(); wallpaperDark = p.dark;
+            wallpaperIdentity = MaterialWallpaper.identity(); wallpaperSurface = p.surface;
             cachedChatWallpaper = MaterialWallpaper.drawable(p.surface, 12);
         }
         return cachedChatWallpaper;

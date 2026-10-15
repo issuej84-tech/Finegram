@@ -8,6 +8,7 @@ android {
         targetSdk 36
         versionCode 1
         versionName '1.0'
+        testInstrumentationRunner 'com.th3nekit.finegram.materialpreview.MaterialPreviewInstrumentation'
     }
     compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
     sourceSets.main {
